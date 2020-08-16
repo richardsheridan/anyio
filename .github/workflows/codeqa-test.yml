@@ -51,9 +51,9 @@ jobs:
         name: coverage-data
     - name: Install Coverage and Coveralls
       run: pip install coverage coveralls
+    - uses: actions/checkout@v2
     - name: Upload to Coveralls
       run: |
-        ls -lR ${{steps.download.outputs.download-path}}
         coverage combine ${{steps.download.outputs.download-path}}
         coverage debug data
         coveralls
