@@ -32,8 +32,8 @@ jobs:
       run: pip install .[test,curio,trio] coveralls
     - name: Test with pytest
       run: |
-        python -c "import os; print(os.getcwd())"
-        coverage run --debug=config -m pytest
+        python -c "import os, sysconfig; os.chdir(sysconfig.get_path('purelib'))"
+        coverage run -m pytest
     - name: Upload Coverage
       run: coveralls
       env:
