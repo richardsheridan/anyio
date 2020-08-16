@@ -32,7 +32,7 @@ jobs:
       run: pip install .[test,curio,trio]
     - name: Test with pytest
       run: coverage run -p -m pytest
-    - name: Upload Coverage artifacts
+    - name: Upload Coverage artifact
       uses: actions/upload-artifact@v2
       with:
         name: coverage-data
