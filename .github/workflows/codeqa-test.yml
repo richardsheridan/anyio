@@ -37,7 +37,11 @@ jobs:
         coverage run --relative-path=$(python -c "import sysconfig; print(sysconfig.get_path('purelib'))") -m pytest
         coverage debug data
     - name: Upload Coverage
-      run: coveralls
+      run: |
+        cd $(python -c "import sysconfig; print(sysconfig.get_path('purelib'))")
+        mv $GITHUB_WORKSPACE/.coverage .
+        coveralls
+        coveralls debug
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         COVERALLS_FLAG_NAME: ${{ matrix.test-name }}
