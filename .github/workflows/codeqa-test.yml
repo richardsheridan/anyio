@@ -32,6 +32,7 @@ jobs:
       run: pip install .[test,curio,trio] coveralls
     - name: Test with pytest
       run: |
+        coverage --help
         coverage run -m pytest
         coverage debug data
     - name: Upload Coverage
