@@ -32,9 +32,8 @@ jobs:
       run: pip install .[test,curio,trio] coveralls
     - name: Test with pytest
       run: |
-        coverage --help
+        python -c "import os; print(os.getcwd())"
         coverage run --debug=config -m pytest
-        coverage debug data
     - name: Upload Coverage
       run: coveralls
       env:
