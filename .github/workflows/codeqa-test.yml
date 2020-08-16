@@ -29,14 +29,19 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
-      run: pip install .[test,curio,trio]
+      run: |
+        pip install .[test,curio,trio] coveralls
+        pip install git+https://github.com/agronholm/coveragepy.git@relativepath
     - name: Test with pytest
-      run: coverage run -p -m pytest
-    - name: Upload coverage artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: coverage-data
-        path: .coverage.*
+      run: |
+        coverage run --relative-path=$(python -c "import sysconfig; print(sysconfig.get_path('purelib'))") -m pytest
+        coverage debug data
+    - name: Upload Coverage
+      run: coveralls
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        COVERALLS_FLAG_NAME: ${{ matrix.test-name }}
+        COVERALLS_PARALLEL: true
 
   coveralls:
     name: Upload coverage data to Coveralls
@@ -44,18 +49,9 @@ jobs:
     runs-on: ubuntu-latest
     container: python:3-slim
     steps:
-    - uses: actions/checkout@v2
-    - name: Download coverage artifacts
-      uses: actions/download-artifact@v2
-      id: download
-      with:
-        name: coverage-data
-    - name: Install Coverage and Coveralls
-      run: pip install coverage coveralls
-    - name: Combine coverage data and upload to coveralls.io
+    - name: Finished
       run: |
-        coverage combine
-        coverage debug data
-        coveralls
+        pip install coveralls
+        coveralls --finish
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
