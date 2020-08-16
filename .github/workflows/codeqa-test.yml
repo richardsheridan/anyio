@@ -33,7 +33,7 @@ jobs:
     - name: Test with pytest
       run: |
         coverage --help
-        coverage run -m pytest
+        coverage run --debug=config -m pytest
         coverage debug data
     - name: Upload Coverage
       run: coveralls
