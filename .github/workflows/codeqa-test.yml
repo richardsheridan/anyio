@@ -29,27 +29,29 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
-      run: pip install .[test,curio,trio] coveralls
+      run: pip install .[test,curio,trio]
     - name: Test with pytest
-      run: |
-        coverage run -m pytest
-        coverage debug data
-    - name: Upload Coverage
-      run: coveralls
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        COVERALLS_FLAG_NAME: ${{ matrix.test-name }}
-        COVERALLS_PARALLEL: true
+      run: coverage run -p -m pytest
+    - name: Upload Coverage artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: coverage-data
+        path: .coverage.*
 
   coveralls:
-    name: Finish Coveralls
+    name: Upload coverage to Coveralls
     needs: test
     runs-on: ubuntu-latest
     container: python:3-slim
     steps:
-    - name: Finished
+    - name: Download coverage artifacts
+      uses: actions/download-artifact@v2
+    - name: Install Coverage and Coveralls
+      run: pip install coverage coveralls
+    - name: Upload to Coveralls
       run: |
-        pip install coveralls
-        coveralls --finish
+        coverage combine
+        coverage debug data
+        coveralls
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
