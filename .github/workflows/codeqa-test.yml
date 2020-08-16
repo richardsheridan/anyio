@@ -51,8 +51,7 @@ jobs:
       run: pip install coverage coveralls
     - name: Upload to Coveralls
       run: |
-        cd ${{steps.download.outputs.download-path}}
-        coverage combine
+        coverage combine ${{steps.download.outputs.download-path}}
         coverage debug data
         coveralls
       env:
