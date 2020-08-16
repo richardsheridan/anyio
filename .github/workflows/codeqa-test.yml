@@ -32,14 +32,14 @@ jobs:
       run: pip install .[test,curio,trio]
     - name: Test with pytest
       run: coverage run -p -m pytest
-    - name: Upload Coverage artifact
+    - name: Upload coverage artifact
       uses: actions/upload-artifact@v2
       with:
         name: coverage-data
         path: .coverage.*
 
   coveralls:
-    name: Upload coverage to Coveralls
+    name: Upload coverage data to Coveralls
     needs: test
     runs-on: ubuntu-latest
     container: python:3-slim
@@ -52,10 +52,9 @@ jobs:
         name: coverage-data
     - name: Install Coverage and Coveralls
       run: pip install coverage coveralls
-    - name: Upload to Coveralls
+    - name: Combine coverage data and upload to coveralls.io
       run: |
-        ls -la ${{steps.download.outputs.download-path}}
-        coverage combine ${{steps.download.outputs.download-path}}
+        coverage combine
         coverage debug data
         coveralls
       env:
