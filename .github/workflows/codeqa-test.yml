@@ -3,34 +3,10 @@ name: Python codeqa/test
 on:
   push:
     branches:
-      - master
-  pull_request:
+      - coverage-debugging
 
 jobs:
-  flake8:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Check code style with Flake8
-      uses: TrueBrain/actions-flake8@master
-      with:
-        path: src tests
-
-  mypy:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.x
-    - name: Install dependencies
-      run: pip install mypy
-    - name: Check types with Mypy
-      run: mypy src
-
   test:
-    needs: [flake8, mypy]
     strategy:
       fail-fast: false
       matrix:
@@ -55,7 +31,9 @@ jobs:
     - name: Install dependencies
       run: pip install .[test,curio,trio] coveralls
     - name: Test with pytest
-      run: coverage run -m pytest
+      run: |
+        coverage run -m pytest
+        coverage debug data
     - name: Upload Coverage
       run: coveralls
       env:
