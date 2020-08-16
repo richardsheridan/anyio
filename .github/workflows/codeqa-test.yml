@@ -30,9 +30,8 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        pip install .[test,curio,trio] coveralls
-        pip uninstall -y coverage
         pip install git+https://github.com/agronholm/coveragepy.git@relativepath
+        pip install .[test,curio,trio] coveralls
     - name: Test with pytest
       run: |
         coverage run --relative-path=$(python -c "import sysconfig; print(sysconfig.get_path('purelib'))") -m pytest
