@@ -46,10 +46,12 @@ jobs:
     steps:
     - name: Download coverage artifacts
       uses: actions/download-artifact@v2
+      id: download
     - name: Install Coverage and Coveralls
       run: pip install coverage coveralls
     - name: Upload to Coveralls
       run: |
+        cd ${{steps.download.outputs.download-path}}
         coverage combine
         coverage debug data
         coveralls
