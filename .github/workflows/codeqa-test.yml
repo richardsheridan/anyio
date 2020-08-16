@@ -34,6 +34,7 @@ jobs:
       run: |
         pwd
         echo $HOME
+        env
         cd $(python -c "import sysconfig; print(sysconfig.get_path('purelib'))")
         coverage run -m pytest
         coverage debug data
