@@ -44,6 +44,7 @@ jobs:
     runs-on: ubuntu-latest
     container: python:3-slim
     steps:
+    - uses: actions/checkout@v2
     - name: Download coverage artifacts
       uses: actions/download-artifact@v2
       id: download
@@ -51,7 +52,6 @@ jobs:
         name: coverage-data
     - name: Install Coverage and Coveralls
       run: pip install coverage coveralls
-    - uses: actions/checkout@v2
     - name: Upload to Coveralls
       run: |
         ls -la ${{steps.download.outputs.download-path}}
