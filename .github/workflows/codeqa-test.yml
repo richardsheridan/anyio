@@ -31,6 +31,7 @@ jobs:
     - name: Install dependencies
       run: |
         pip install .[test,curio,trio] coveralls
+        pip uninstall -y coverage
         pip install git+https://github.com/agronholm/coveragepy.git@relativepath
     - name: Test with pytest
       run: |
